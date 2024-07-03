@@ -34,8 +34,7 @@ class HTMLNode:
         return ret_value
 
     def __repr__(self):
-        # uncomment the 2 below comments if this function is bugged
-        # ret_value = ""
+        ret_value = "" 
         if self.tag != None:
             print(f"tag:{self.tag}")
         if self.value != None:
@@ -44,7 +43,7 @@ class HTMLNode:
             print(f"children:{self.children}")
         if self.props != None:
             print(f"props:{self.props}")
-        # return ret_value
+        return ret_value
 
     def __eq__(self, HTMLNode2):
         flag = True
