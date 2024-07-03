@@ -1,3 +1,5 @@
+from htmlnode import *
+
 #Assumptions: 
 #   that the pargument "markdown" is an entire document
 #Expected behaviour:
@@ -192,4 +194,130 @@ def block_to_block_type(block_list):
     return ret_tuple_list
 
 
-# memmo: push to Github when done with this exercise.
+#Assumptions:
+#   Gets passed a string that is a quote.
+#Expected behaviour:
+#   From that string it creates a ParentNode to contain the ChildNode(s).
+#   For each '\n' character in said string there is another child (n+1 pr \n).
+#Encapsulation change:
+#   None.
+def block_to_html_quote(block):
+    quote_symbol = ">"
+    children = []
+    
+    child_text = block.split('\n')
+    new_child_text = []
+    for text in child_text:
+        new_child_text.append(text.lstrip(quote_symbol))
+
+    children = []
+    for text in new_child_text:
+        children.append(LeafNode("p", text))
+
+    parentNode = ParentNode("blockquote", children)
+    return parentNode
+
+#Assumptions:
+#   Gets passed a string that is an unordered list.
+#   That list begins either with a "* " or "- ".
+#Expected behaviour:
+#   From that string it creates a ParentNode to contain the ChildNode(s).
+#   For each '\n' character in said string there is another child (n+1 pr \n).
+#Encapsulation change:
+#   None.
+def block_to_html_unordered_list(block):
+    unordered_list_symbol = "* "
+
+    search_val = block.find(unordered_list_symbol)
+    if search_val != 0:
+        unordered_list_symbol = "- "
+
+    children = []
+    
+    child_text = block.split('\n')
+    new_child_text = []
+    for text in child_text:
+        new_child_text.append(text.lstrip(unordered_list_symbol))
+
+    children = []
+    for text in new_child_text:
+        children.append(LeafNode("li", text))
+
+    parentNode = ParentNode("ul", children)
+    return parentNode
+
+def block_to_html_ordered_list(block):
+    list_line_num = 1
+    list_symbol = "1. "
+    children = []
+    
+    child_text = block.split('\n')
+    new_child_text = []
+    for text in child_text:
+        new_child_text.append(text.lstrip(list_symbol))
+        list_line_num += 1
+        list_symbol = str(list_line_num) + ". "
+
+    children = []
+    for text in new_child_text:
+        children.append(LeafNode("ol", text))
+
+    parentNode = ParentNode("li", children)
+    return parentNode
+
+#Assumptions:
+#  That the block parameter contains a string surrounded by "```" 
+#Expected behaviour:
+#  Takes the block paramter, which is a string, and turns it into
+# a LeadNode class object encapsulated by a ParentNode that in turn is 
+# encapsulated by another ParentNode. As an effect the returned html looks 
+# like: <pre><code>block string</code></pre>
+#Encapsulation change:
+#  None
+def block_to_html_code(block):
+    code_symbol = "```"
+    children = []
+
+    block = block.lstrip(code_symbol)
+    block = block.rstrip(code_symbol)
+    child_text = block.split('\n')
+
+    for child in child_text:
+        children.append(LeafNode("p", child)) 
+
+    parentNode = ParentNode("code", children)
+    parentNode2 = ParentNode("pre", [parentNode])
+
+    return parentNode2
+
+
+def block_to_html_heading(block):
+    header_symbol = '#'
+    header_degree = 0
+    children = []
+
+    for char in block:
+        if char == header_symbol:
+            header_degree += 1
+        else:
+            break
+    
+    header_is = 'H' + str(header_degree)
+
+    if header_degree == 1:
+        block = block.lstrip(header_symbol)
+    else:
+        for i in range(0, header_degree - 1):
+            block = block.lstrip(header_symbol)
+
+    child_text = block.split('\n')
+
+    for child in child_text:
+        children.append(LeafNode("p", child))
+
+    return ParentNode(header_is, children)
+
+def block_to_html_paragraph(block):
+    return LeafNode("p", block)
+
+

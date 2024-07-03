@@ -14,6 +14,15 @@ This is the same paragraph on a new line
  * This is the second line
 * This is the 3rd line
 
+- This is a list
+
+- This is a list
+- on two lines
+
+- This is not a list
+ - This is second line
+- This is the 3rd line
+
 1. This is an ordered list
 
 1. This is an ordered list
@@ -64,7 +73,24 @@ print("------------------")
 print(markdown_list)
 
 print("------------------")
-print(block_to_block_type(markdown_list))
+list_to_blocks = block_to_block_type(markdown_list)
+print(list_to_blocks)
+
+block_type_paragraph = "paragraph"
+block_type_heading = "heading"
+block_type_code = "code"
+block_type_quote = "quote"
+block_type_unordered_list = "unordered_list"
+block_type_ordered_list = "ordered_list"
+
+print("------------------")
+test_node = []
+for item in list_to_blocks:
+    if item[1] == block_type_heading:
+        test_node.append(block_to_html_heading(item[0]))
+
+for node in test_node:
+    print(node.to_html())
 
 
 
