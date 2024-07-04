@@ -93,4 +93,6 @@ for node in test_node:
     print(node.to_html())
 
 
-
+print("-------markdown_to_html_node function--------")
+parentNode = markdown_to_html_node(test_text1)
+print(parentNode.to_html())

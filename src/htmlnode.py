@@ -155,7 +155,7 @@ text_type_image = "image"
 #   the parameter "text_type" contains either text_type_bold, text_type_italic,
 #  or text_type_code.
 #Expected behaviour:
-#   checks each old_nodes if it is a text_type_text and proceeds to break up
+#   checks each old_nodes if it is a text_type_text it proceeds to break up
 #  that text into what the delimiter argument is defined as and the remainder
 #  into text .. however it outputs only a TextNode class objects list.
 #Encapsulation change:
@@ -184,6 +184,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 #   finds all strings resembling: "![any text](and a link)"
 #   returns a list of tuples resembling: "[('any text','and a link'), ..]"
 #Encapsulation change:
+#   none.
 def extract_markdown_images(text):
     return re.findall(r"!\[(.*?)\]\((.*?)\)", text)
 
@@ -192,6 +193,7 @@ def extract_markdown_images(text):
 #    same as the function extract_markdown_image except this function finds
 #   a string resembling: "[any text](and a link)"
 #Encapsulation change:
+#   none.
 def extract_markdown_links(text):
     return re.findall(r"\[(.*?)\]\((.*?)\)", text)
 
