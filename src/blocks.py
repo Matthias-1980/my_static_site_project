@@ -4,9 +4,10 @@ from htmlnode import *
 #   that the pargument "markdown" is an entire document
 #Expected behaviour:
 #   breaks a document down into lists. Each list element is considered a block.
-#   Blocks are defined by new lines between them.
+#   Blocks are defined by new lines between them. A new line character 
+#  inside a line of text does not count as a block divider.
 #Encapsulation change: 
-#   none
+#   Creates and returns a list of strings.
 def markdown_to_blocks(markdown):
     new_block_flag = False
     true_new_block = False
@@ -55,6 +56,7 @@ block_type_ordered_list = "ordered_list"
 #Expected behaviour:
 #   For each first characters per block in a list of blocks .. 
 #  those characters define what that block is: code, quote, list, heading, .. .
+#   For each block, in a list, a list of tuples is creates: [(block, type), ..]
 #Encapsulation change:
 #   None.
 def block_to_block_type(block_list):
@@ -269,7 +271,7 @@ def block_to_html_ordered_list(block):
 #  That the block parameter contains a string surrounded by "```" 
 #Expected behaviour:
 #  Takes the block paramter, which is a string, and turns it into
-# a LeadNode class object encapsulated by a ParentNode that in turn is 
+# a LeadFode class object encapsulated by a ParentNode that in turn is 
 # encapsulated by another ParentNode. As an effect the returned html looks 
 # like: <pre><code>block string</code></pre>
 #Encapsulation change:
@@ -321,3 +323,28 @@ def block_to_html_paragraph(block):
     return LeafNode("p", block)
 
 
+def markdown_to_html_node(markdown):
+    markdown_blocks = markdown_to_blocks(markdown)
+    blocks_to_type = block_to_block_type(markdown_blocks)
+
+    html_nodes = []
+    for item in blocks_to_type:
+        if item[1] == block_type_paragraph:
+            html_nodes.append(block_to_html_paragraph(item[0]))
+        elif item[1] == block_type_heading:
+            html_nodes.append(block_to_html_heading(item[0]))
+        elif item[1] == block_type_code:
+            html_nodes.append(block_to_html_code(item[0]))
+        elif item[1] == block_type_quote:
+            html_nodes.append(block_to_html_quote(item[0]))
+        elif item[1] == block_type_unordered_list:
+            html_nodes.append(block_to_html_unordered_list(item[0]))
+        elif item[1] == block_type_ordered_list:
+            html_nodes.append(block_to_html_ordered_list(item[0]))
+        else:
+            raise Exception("uncaught item in markdown_to_html_node function")
+
+    return ParentNode("div", html_nodes)
+
+
+        
