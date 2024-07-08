@@ -102,7 +102,20 @@ print(new_nodes3)
 text_test1 = "This is **text** with an *italic* word and a `code block` and an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and a [link](https://boot.dev)"
 text_test2 =  "This is **text** with an *italic* word and a `code block` and an ![image](https://storage.googleapis.com/qvault-webapp-dynamic-assets/course_assets/zjjcJKZ.png) and a [link](https://boot.dev) [link](https://www.ruv.is) **ruv** *is* a website."
 print("----------------")
-print(text_to_textnodes(text_test2))
+text_to_textnodes_2 = text_to_textnodes(text_test2)
+print(text_to_textnodes_2)
+
+print("-----------------")
+html_nodes_2 = []
+for textnode in text_to_textnodes_2:
+    html_nodes_2.append(text_node_to_html_node(textnode))
+
+print("----------------")
+string_1 = ""
+for html_node in html_nodes_2:
+    string_1 += html_node.to_html()
+
+print(string_1)
 
 
 if __name__ == "__main__":

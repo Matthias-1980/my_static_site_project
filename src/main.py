@@ -5,7 +5,7 @@ from blocks import *
 from htmlnode import *
 
 def main():
-    # copy_static_to_public() 
+    copy_static_to_public() 
     
     content_file_path = "../content/index.md"
         
@@ -13,7 +13,17 @@ def main():
     dest_path = "../public/"
     generate_page(content_file_path, template_file_path, dest_path)
 
-
+#Assumptions:
+#  that the parameter "from_path" points to a file containing text.
+#  that the parameter "template_path" points to an html file that 
+# will be altered.
+#  that the parameter "dest_path" points to a folder to write to.
+#Expected behaviour:
+#  the "from_path" file gets converted into html, and the template_path file
+# gets altered with that new html inserted into it. The new html gets written
+# to the dest_path folder with the name defined by html_file_name variable.
+#Encapsulation change:
+# index.html gets written to the folder defined by "dest_path" parameter.
 def generate_page(from_path, template_path, dest_path):
     html_file_name = "index.html"
     print(f"Generating page from {from_path} to {dest_path}")
@@ -28,8 +38,13 @@ def generate_page(from_path, template_path, dest_path):
     open_file2.close()
     
     title = extract_title(from_path)
-    
-    markdown_html_node = markdown_to_html_node(index_md)
+   
+    index_md_to_textnodes = text_to_textnodes(index_md)
+    new_string = ""
+    for textnode in index_md_to_textnodes:
+        new_string += (text_node_to_html_node(textnode)).to_html()
+
+    markdown_html_node = markdown_to_html_node(new_string)
     html = markdown_html_node.to_html()
     
     template_html = template_html.replace("{{ Title }}", title)    
