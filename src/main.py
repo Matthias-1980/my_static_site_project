@@ -7,17 +7,76 @@ from htmlnode import *
 def main():
     copy_static_to_public() 
     
-    content_file_path = "./content/index.md"
-        
-    template_file_path = "./template.html"
-    dest_path = "./public/"
-    generate_page(content_file_path, template_file_path, dest_path)
+    # content_file_path = "./content/index.md"        
+    # template_file_path = "./template.html"
+    # dest_path = "./public/"
+    # generate_page(content_file_path, template_file_path, dest_path)
+    
+    dir_path_content = "./content/"
+    template_path = "./template.html"
+    dest_dir_path = "./public/"
+
+    print("Generating pages ..")
+    generate_pages_recursive(dir_path_content, template_path, dest_dir_path)
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    cur_content_dir = os.listdir(dir_path_content)
+    html_file_name = "index.html"
+    
+    for file in cur_content_dir:
+        if os.path.isfile((dir_path_content + file)):
+            print(f"{dir_path_content + file} -> {dest_dir_path + html_file_name}")
+            from_path = dir_path_content + file
+            
+            open_file = open(from_path)
+            index_md = open_file.read()
+            open_file.close()
+
+            open_file2 = open(template_path)
+            template_html = open_file2.read()
+            open_file2.close()
+    
+            title = extract_title(from_path)
+   
+            index_md_to_textnodes = text_to_textnodes(index_md)
+            new_string = ""
+            for textnode in index_md_to_textnodes:
+                new_string += (text_node_to_html_node(textnode)).to_html()
+
+            markdown_html_node = markdown_to_html_node(new_string)
+            html = markdown_html_node.to_html()
+            
+            template_html = template_html.replace("{{ Title }}", title)    
+            template_html = template_html.replace("{{ Content }}", html)
+    
+            if os.path.exists(dest_dir_path):
+                open_file3 = open((dest_dir_path + html_file_name), 'w', encoding="utf-8")
+                open_file3.write(template_html)
+                open_file3.close()
+            else:
+                raise Exception("path to write html file does not exist, exiting.")
+
+
+
+        elif os.path.isdir((dir_path_content + file)):
+            new_content_dir = dir_path_content + file + '/'
+            new_dest_path = dest_dir_path + file + '/'
+            if not os.path.exists(new_dest_path):
+                os.mkdir(new_dest_path)
+
+            generate_pages_recursive(new_content_dir, template_path, new_dest_path)
+
+    
+    
+
+
 
 #Assumptions:
 #  that the parameter "from_path" points to a file containing text.
 #  that the parameter "template_path" points to an html file that 
-# will be altered.
-#  that the parameter "dest_path" points to a folder to write to.
+# will be copied and the copy gets altered.
+#  that the parameter "dest_path" points to a folder to write the html to.
 #Expected behaviour:
 #  the "from_path" file gets converted into html, and the template_path file
 # gets altered with that new html inserted into it. The new html gets written
