@@ -262,9 +262,9 @@ def block_to_html_ordered_list(block):
 
     children = []
     for text in new_child_text:
-        children.append(LeafNode("ol", text))
+        children.append(LeafNode("li", text))
 
-    parentNode = ParentNode("li", children)
+    parentNode = ParentNode("ol", children)
     return parentNode
 
 #Assumptions:
