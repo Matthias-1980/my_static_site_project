@@ -162,7 +162,7 @@ def extract_title(markdown):
 #   Creates an empty folder called public in the root of the project.
 #   Populates that public folder with the content of the static folder.
 def copy_static_to_public():
-    public_exists = False
+    content_exists = False
     static_exists = False
     src_exists = False
 
@@ -171,24 +171,19 @@ def copy_static_to_public():
 
     dir_list = os.listdir(".")
     for item in dir_list:
-        if item == "public":
-            public_exists = True
+        if item == "content":
+            content_exists = True
         if item == "static":
             static_exists = True
         if item == "src":
             src_exists = True
 
-    if not public_exists and not static_exists and not src_exists:
-        raise Exception("one or more of the folders does not exist, exiting.")
+    if not content_exists and not static_exists and not src_exists:
+        raise Exception("program ran in wrong directory, exiting.")
 
-    cwd = os.getcwd()
-    cwd = cwd.split('/')
+    if os.path.exists(public_path):
+        shutil.rmtree(public_path)
 
-    cur_dir = cwd.pop()
-    if cur_dir != "my_static_site_project":
-        raise Exception("program ran in wrong directory")
-
-    shutil.rmtree(public_path)
     os.mkdir(public_path)
 
     dir_list = os.listdir(static_path)
