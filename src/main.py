@@ -7,10 +7,10 @@ from htmlnode import *
 def main():
     copy_static_to_public() 
     
-    content_file_path = "../content/index.md"
+    content_file_path = "./content/index.md"
         
-    template_file_path = "../template.html"
-    dest_path = "../public/"
+    template_file_path = "./template.html"
+    dest_path = "./public/"
     generate_page(content_file_path, template_file_path, dest_path)
 
 #Assumptions:
@@ -107,11 +107,11 @@ def copy_static_to_public():
     static_exists = False
     src_exists = False
 
-    public_path = "./../public/"
-    static_path = "./../static/"
+    public_path = "./public/"
+    static_path = "./static/"
 
-    sub_dir_list = os.listdir("..")
-    for item in sub_dir_list:
+    dir_list = os.listdir(".")
+    for item in dir_list:
         if item == "public":
             public_exists = True
         if item == "static":
@@ -125,12 +125,8 @@ def copy_static_to_public():
     cwd = os.getcwd()
     cwd = cwd.split('/')
 
-    cur_working_dir = cwd.pop()
-    if cur_working_dir != "src":
-        raise Exception("program ran in wrong directory")
-
-    parent_dir = cwd.pop()
-    if parent_dir != "my_static_site_project":
+    cur_dir = cwd.pop()
+    if cur_dir != "my_static_site_project":
         raise Exception("program ran in wrong directory")
 
     shutil.rmtree(public_path)
