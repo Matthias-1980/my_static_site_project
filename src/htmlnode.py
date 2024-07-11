@@ -50,7 +50,7 @@ class HTMLNode:
         if(self.tag != HTMLNode2.tag or self.value != HTMLNode2.value):
             flag = False
 
-        # does not test self.children .. 
+        # does not test self.children being equal between compared nodes. 
         # testing self.children most likely requires recursion         
 
         if(self.props == None and HTMLNode2.props == None):
@@ -122,8 +122,8 @@ class LeafNode(HTMLNode):
 #Expected behaviour:
 #  creates and returns a LeafNode class object outof the text_node parameter.
 #Encapsulation change:
+#  none.
 def text_node_to_html_node(text_node):
-    # asuming that "text" is used for plain text
     if text_node.text_type == "text":
         return LeafNode(None, text_node.text)
     elif text_node.text_type == "bold":
@@ -134,7 +134,6 @@ def text_node_to_html_node(text_node):
         return LeafNode("code", text_node.text)
     elif text_node.text_type == "link":
         return LeafNode("a", text_node.text, {"href": text_node.url})
-    #asuming that "image" is used for images instead of "img"
     elif text_node.text_type == "image":
         return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
     else:
@@ -157,8 +156,9 @@ text_type_image = "image"
 #Expected behaviour:
 #   checks each old_nodes if it is a text_type_text it proceeds to break up
 #  that text into what the delimiter argument is defined as and the remainder
-#  into text .. however it outputs only a TextNode class objects list.
+#  into text .. however it outputs only a TextNode class object list.
 #Encapsulation change:
+#  none.
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
     for old_node in old_nodes:
@@ -206,7 +206,9 @@ def extract_markdown_links(text):
 #  class objects .. 
 #  and the remainder of that node's text that does not belong to the image
 #  gets extracted into their own TextNode class objects.
+#   returned value is a list of TextNodes.
 #Encapsulation change:
+#  none.
 def split_nodes_image(old_nodes):
     new_nodes = []
     for node in old_nodes:
@@ -237,6 +239,14 @@ def split_nodes_image(old_nodes):
 
   
 
+#Assumptions:
+#  that the parameter old_nodes contains a list of TextNode class objects.
+#Expected behaviour:
+#  processes only TextNode class objects that are of the type text_type_text.
+#  if it finds a link in the TextNode it proceeds to extract it one by one.
+#  Placing the link into a TextNode and surrounding text that does not belong
+# to the link into their own TextNodes.
+#  Returned value is a list of textnodes
 def split_nodes_link(old_nodes):
     new_nodes = []
     for node in old_nodes:
@@ -267,6 +277,16 @@ def split_nodes_link(old_nodes):
     return new_nodes
 
 
+#Assumptions:
+#  The parameter "text" is a string that contains a document. Various text in
+# the document is surrounded by **, *, `, [link](..), or ![link](..) to 
+# indicate that the text they surround are respectively bold, italic, code, 
+# links, or image links.
+#Expected behaviour:
+#   Outputs a list of TextNodes.
+#   Takes a string and makes a TextNode outof it, 
+#  and defines that TextNode into other types of TextNodes other than
+#  text_type_text.
 def text_to_textnodes(text):
     ret_node = []
     init_text_node = [TextNode(text, text_type_text)]
