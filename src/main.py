@@ -6,12 +6,7 @@ from htmlnode import *
 
 def main():
     copy_static_to_public() 
-    
-    # content_file_path = "./content/index.md"        
-    # template_file_path = "./template.html"
-    # dest_path = "./public/"
-    # generate_page(content_file_path, template_file_path, dest_path)
-    
+        
     dir_path_content = "./content/"
     template_path = "./template.html"
     dest_dir_path = "./public/"
@@ -19,7 +14,25 @@ def main():
     print("Generating pages ..")
     generate_pages_recursive(dir_path_content, template_path, dest_dir_path)
 
-
+#Note:
+#   Flaw: that the content folder in the root of the project contains only
+#  directories and files with the extention "md" which is markdown files.
+#  (the function will convert ANY file inside of the content folder directory
+#  tree into an index.html file (which is a flaw)).
+#Assumptions: 
+#   That the dir_path_content parameter points to a file to convert.
+#   That the dest_dir_path parameter points to a location to write a file.
+#   That the template_path parameter points to a template file to use in 
+#  a converstion of a file into an index dot html file.
+#Expected behaviour:
+#   Recursively takes a file from, and down, the content folder's directory 
+#  tree, and turns it into a dot html file in the destination folder. 
+#  The recursion part is that the content
+#  folder's directory tree is used in the destination folder when the html
+#  files are generated.
+#Encapsulation change:
+#   Creates index dot html files in the destination folder and 
+#  its sub directories.
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     cur_content_dir = os.listdir(dir_path_content)
     html_file_name = "index.html"
@@ -71,7 +84,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     
 
 
-
+#Note: Function is not used. Can be deleted.
 #Assumptions:
 #  that the parameter "from_path" points to a file containing text.
 #  that the parameter "template_path" points to an html file that 
@@ -197,7 +210,10 @@ def copy_static_to_public():
 #  Loopy contains a semi-fail switch that is a counter. That counter tries
 # to prevent Loopy from running a mock by preventing it from moving more than
 # 10 files or directories.
-#Encapsulation change:
+#  This function copies the content of one directory and its sub directories
+# into another directory. In short it copies the directory structure and files.
+#Note:
+#  change the name.
 def loopy(file_dir, file_list, to_folder):
     counter = 0
     count_to = 10

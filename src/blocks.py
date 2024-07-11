@@ -32,7 +32,7 @@ def markdown_to_blocks(markdown):
 
         else:
             if new_block_flag:
-                # elements within same block get seperated by new line char
+                # lines within same block get seperated by new line char
                 assembled_line += ('\n' + letter)
             else:
                 assembled_line += letter
@@ -248,6 +248,16 @@ def block_to_html_unordered_list(block):
     parentNode = ParentNode("ul", children)
     return parentNode
 
+
+#Assumptions:
+#  that it gets passed a string that is an ordered list.
+#  that string begins with an "1. "
+#Expected behaviour:
+#  the function strips away each lines ordered list characters: 1. 2. 3. ..
+# and then creates Leaf and Parent nodes to contain an ordered list
+# that is created outof the lines.
+#Encapsulation change:
+#  None.
 def block_to_html_ordered_list(block):
     list_line_num = 1
     list_symbol = "1. "
@@ -275,7 +285,7 @@ def block_to_html_ordered_list(block):
 # encapsulated by another ParentNode. As an effect the returned html looks 
 # like: <pre><code>block string</code></pre>
 #Encapsulation change:
-#  None
+#  None.
 def block_to_html_code(block):
     code_symbol = "```"
     children = []
@@ -293,6 +303,16 @@ def block_to_html_code(block):
     return parentNode2
 
 
+#Assumptions:
+#  that the block parameter is a string that begins 
+# with 1 to 6 '#' characters.
+#Expected behaviour:
+#  counts, and removes, the '#' characters in the begining of the 
+# block parameter, and depending on that count creates a html header 
+# tag of degree 1 to 6.
+#  For each line in the block parameter it creates a leafnode. Those 
+# leafnodes are encapsulated in a single parentnode. 
+#Encapsulation change:
 def block_to_html_heading(block):
     header_symbol = '#'
     header_degree = 0
@@ -319,10 +339,20 @@ def block_to_html_heading(block):
 
     return ParentNode(header_is, children)
 
+
+#Assumptions:
+#  that is gets passed a parameter that is a string.
+#Expected behaviour:
+#  creates a leafnode with a html paragraph tag, and the value of the 
+# block parameter.
 def block_to_html_paragraph(block):
     return LeafNode("p", block)
 
-
+#Assumptions: 
+#  that the markdown parameter is a string containing a markdown document.
+#Expected behaviour:
+#  Converts a markdown document into a single parentnode that encapsulates
+# its children with the html div tag.
 def markdown_to_html_node(markdown):
     markdown_blocks = markdown_to_blocks(markdown)
     blocks_to_type = block_to_block_type(markdown_blocks)

@@ -4,8 +4,6 @@ class TextNode:
         self.text_type = text_type
         self.url = url
 
-    # this following method gets used by the unit test.
-    # this following method defines how it is testes as equal to another TextNode.
     def __eq__(self, TextNode2):
         if(self.text == TextNode2.text and 
             self.text_type == TextNode2.text_type and
